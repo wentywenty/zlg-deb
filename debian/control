@@ -1,0 +1,12 @@
+Source: usbcanfd-dkms
+Section: kernel
+Priority: optional
+Maintainer: ZHIYUAN Electronics <support@zhiyuan.com>
+Build-Depends: debhelper (>= 12)
+
+Package: usbcanfd-dkms
+Architecture: all
+Depends: dkms (>= 2.2.0.3), ${misc:Depends}
+Description: ZHIYUAN USBCANFD200/400U USB-CAN-FD driver (DKMS)
+ This package contains the source for the ZHIYUAN usbcanfd
+ driver, packaged with DKMS to auto-rebuild on kernel upgrades.

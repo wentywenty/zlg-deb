@@ -8,4 +8,23 @@ Module.symvers
 modules.order
 .tmp_versions/
 *.deb
+*.ddeb
+*.buildinfo
+*.changes
+*.cmd
+.ko.*
 usbcanfd.mod
+debian/.debhelper/
+debian/*debhelper*
+debian/*.log
+debian/debhelper-build-stamp
+debian/files
+debian/*.substvars
+debian/usbcanfd-dkms/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

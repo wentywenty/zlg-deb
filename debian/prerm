@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+NAME=usbcanfd
+VERSION=2.10
+
+case "$1" in
+  remove|upgrade|deconfigure)
+    dkms remove -m $NAME -v $VERSION --all 2>/dev/null || true
+  ;;
+esac

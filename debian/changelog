@@ -1,0 +1,11 @@
+usbcanfd-dkms (2.10-2) stable; urgency=medium
+
+  * Bump revision.
+
+ -- ZHIYUAN Electronics <support@zhiyuan.com>  Tue, 23 Jun 2026 10:00:00 +0800
+
+usbcanfd-dkms (2.10-1) stable; urgency=medium
+
+  * Initial release. ZHIYUAN USBCANFD200/400U USB-CAN-FD driver (DKMS).
+
+ -- ZHIYUAN Electronics <support@zhiyuan.com>  Mon, 23 Jun 2026 10:00:00 +0800
