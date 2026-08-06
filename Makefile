@@ -1,4 +1,7 @@
-KDIR=/lib/modules/`uname -r`/build
+# KDIR=/lib/modules/`uname -r`/build
+
+KDIR=/usr/src/linux-headers-6-rt # rdk x5
+
 obj-m := usbcanfd.o
 
 all: module
