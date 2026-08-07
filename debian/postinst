@@ -16,11 +16,22 @@ case "$1" in
     if [ -d "$BUILD_DIR" ]; then
       dkms build -m $NAME -v $VERSION
       dkms install -m $NAME -v $VERSION
-    elif hrut_socuid >/dev/null 2>&1 && [ -d "/usr/src/linux-headers-$KERNEL_REL" ]; then
-      echo "RDK X5 detected via hrut_socuid, linking /usr/src/linux-headers-$KERNEL_REL" >&2
-      ln -sf "/usr/src/linux-headers-$KERNEL_REL" "$BUILD_DIR"
-      dkms build -m $NAME -v $VERSION
-      dkms install -m $NAME -v $VERSION
+    elif hrut_socuid >/dev/null 2>&1; then
+      echo "RDK X5 detected via hrut_socuid" >&2
+      HDR_DIR="/usr/src/linux-headers-$KERNEL_REL"
+      if [ ! -d "$HDR_DIR" ]; then
+        HDR_DIR=$(ls -d /usr/src/linux-headers-*rt* 2>/dev/null | head -1)
+      fi
+      if [ -n "$HDR_DIR" ] && [ -d "$HDR_DIR" ]; then
+        echo "Linking $HDR_DIR -> $BUILD_DIR" >&2
+        ln -sf "$HDR_DIR" "$BUILD_DIR"
+        dkms build -m $NAME -v $VERSION
+        dkms install -m $NAME -v $VERSION
+      else
+        echo "ERROR: No kernel headers found in /usr/src/" >&2
+        echo "Install: apt install linux-headers-current-rockchip-rk3588" >&2
+        exit 1
+      fi
     else
       echo "ERROR: Kernel headers not found at $BUILD_DIR" >&2
       echo "" >&2

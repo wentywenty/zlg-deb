@@ -1,7 +1,13 @@
 KERNEL_REL := $(shell uname -r)
 
-ifeq ($(shell which hrut_socuid >/dev/null 2>&1 && hrut_socuid 2>/dev/null | grep -c soc_uid || echo 0),1)
-  KDIR := /usr/src/linux-headers-$(KERNEL_REL)
+IS_RDK := $(shell which hrut_socuid >/dev/null 2>&1 && echo 1 || echo 0)
+
+ifeq ($(IS_RDK),1)
+  KDIR := $(shell if [ -d /usr/src/linux-headers-$(KERNEL_REL) ]; then \
+    echo /usr/src/linux-headers-$(KERNEL_REL); \
+  else \
+    ls -d /usr/src/linux-headers-*rt* 2>/dev/null | head -1; \
+  fi)
   $(info RDK X5 detected via hrut_socuid, KDIR=$(KDIR))
 else
   KDIR := /lib/modules/$(KERNEL_REL)/build
