@@ -9,17 +9,26 @@ case "$1" in
     if ! dkms status -m $NAME -v $VERSION 2>/dev/null | grep -q added; then
       dkms add -m $NAME -v $VERSION
     fi
-    if [ -d "/lib/modules/$(uname -r)/build" ]; then
+
+    KERNEL_REL=$(uname -r)
+    BUILD_DIR="/lib/modules/$KERNEL_REL/build"
+
+    if [ -d "$BUILD_DIR" ]; then
+      dkms build -m $NAME -v $VERSION
+      dkms install -m $NAME -v $VERSION
+    elif hrut_socuid >/dev/null 2>&1 && [ -d "/usr/src/linux-headers-$KERNEL_REL" ]; then
+      echo "RDK X5 detected via hrut_socuid, linking /usr/src/linux-headers-$KERNEL_REL" >&2
+      ln -sf "/usr/src/linux-headers-$KERNEL_REL" "$BUILD_DIR"
       dkms build -m $NAME -v $VERSION
       dkms install -m $NAME -v $VERSION
     else
-      echo "ERROR: Kernel headers not found at /lib/modules/$(uname -r)/build" >&2
+      echo "ERROR: Kernel headers not found at $BUILD_DIR" >&2
       echo "" >&2
       echo "DKMS needs kernel headers to compile the $NAME module." >&2
       echo "Install the matching kernel headers package, for example:" >&2
-      echo "  Ubuntu/Debian:  apt install linux-headers-$(uname -r)" >&2
-      echo "  Rockchip:       apt install linux-headers-current-rockchip-rk3588" >&2
-      echo "  Or search:      apt search linux-headers | grep $(uname -r)" >&2
+      echo "  Ubuntu/Debian:   apt install linux-headers-$KERNEL_REL" >&2
+      echo "  RDK X5/Rockchip: apt install linux-headers-current-rockchip-rk3588" >&2
+      echo "  Or search:       apt search linux-headers | grep $KERNEL_REL" >&2
       exit 1
     fi
   ;;

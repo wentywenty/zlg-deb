@@ -3,12 +3,20 @@
 export DH_VERBOSE=1
 include /usr/share/dpkg/pkg-info.mk
 
+KERNEL_REL := $(shell uname -r)
+
+ifeq ($(shell which hrut_socuid >/dev/null 2>&1 && hrut_socuid 2>/dev/null | grep -c soc_uid || echo 0),1)
+  KERNEL_SRC ?= /usr/src/linux-headers-$(KERNEL_REL)
+else
+  KERNEL_SRC ?= /lib/modules/$(KERNEL_REL)/build
+endif
+
+export KERNEL_SRC
+
 CROSS_COMPILE ?=
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH 2>/dev/null || echo amd64)
 KERNEL_ARCH := $(if $(filter amd64,$(DEB_HOST_ARCH)),x86,$(if $(filter arm64,$(DEB_HOST_ARCH)),arm64,$(DEB_HOST_ARCH)))
 export ARCH ?= $(KERNEL_ARCH)
-# export KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
-export KERNEL_SRC ?= /usr/src/linux-headers-6-rt # rdk x5
 
 %:
 	dh $@
