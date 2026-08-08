@@ -25,6 +25,10 @@ case "$1" in
       if [ -n "$HDR_DIR" ] && [ -d "$HDR_DIR" ]; then
         echo "Linking $HDR_DIR -> $BUILD_DIR" >&2
         ln -sf "$HDR_DIR" "$BUILD_DIR"
+        if [ ! -f "$HDR_DIR/scripts/basic/fixdep" ]; then
+          echo "Preparing kernel build tools (make ARCH=arm64 scripts)..." >&2
+          make -C "$HDR_DIR" ARCH=arm64 scripts
+        fi
         dkms build -m $NAME -v $VERSION
         dkms install -m $NAME -v $VERSION
       else

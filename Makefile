@@ -27,6 +27,10 @@ module:
 		echo "  Or search:       apt search linux-headers | grep $(KERNEL_REL)" >&2; \
 		exit 1; \
 	fi
+	@if [ ! -f "$(KDIR)/scripts/basic/fixdep" ]; then \
+		echo "Preparing kernel build tools (make ARCH=arm64 scripts)..." >&2; \
+		make -C $(KDIR) ARCH=arm64 scripts; \
+	fi
 	make -C $(KDIR) M=$(PWD) modules
 
 clean:
